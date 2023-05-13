@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load custom_tags %}
+{% block content %}
+
+   <form action="" method="get">
+{% for f in filterset.form %}
+<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+
+
+       <input type="submit" value="Найти" />
+   </form>
+<hr>
+
+<ul class="list-articles">
+	{% for c in comments %}
+			<li><div class="article-panel">
+	<p class="first">От: {{c.user }}</p>
+	<p class="last">Дата: {{c.time_in|date:"d-m-Y H:i:s" }}</p>
+</div>
+
+	{% autoescape on %}
+	{{c.text|linebreaks|truncatewords:50}}
+	Статус комментария: {{c.status }} -
+				{% if  c.status != True %}
+	<a href="{% url 'edit_comment_status' c.id %}">Опубликовать</a>/
+				{% endif %}
+	<a href="{% url 'delete_comment' c.id %}">Удалить</a>
+	{% endautoescape %}
+			<div class="clear"></div>
+
+			</li>
+	{% endfor %}
+</ul>
+{% endblock %}

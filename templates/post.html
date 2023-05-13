@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+</ul>
+
+<h3>{{ post.article }}</h3>
+<h4>{{ post.created|date:'d M Y' }}</h4>
+<h4>{{ object.post_text|safe }}</h4>
+
+
+{% if request.user.is_authenticated %}
+<p>Комментарии: {{ post.comments_post.all.count }}</p>
+<hr>
+<p>Добавить комментарий</p>
+
+<ul>
+{% for c in post.comments_post.all %}
+
+<li>
+{{ c.user }} {{ c.time_in }}<br>
+    {{ c.text }}<br>
+{{ c.status }}
+</li>
+{% endfor %}
+
+</ul>
+
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+{% for f in form %}
+<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+
+        <button type="submit">Добавить</button>
+</form>
+    {% endif %}
+
+
+{% endblock content %}
